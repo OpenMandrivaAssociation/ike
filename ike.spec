@@ -67,10 +67,13 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr \
 %make
 
 %install
+rm -rf %{buildroot}
 %makeinstall_std
 
 %{__install} -m644 %{SOURCE1} -D %{buildroot}%{_sysconfdir}/iked.conf
 %{__install} -m755 script/iked -D %{buildroot}%{_initrddir}/iked
+mkdir -p %{buildroot}%{_docdir}/%{name}
+%{__install} -m750 *.TXT -D %{buildroot}%{_docdir}/%{name}
 
 #menu entry
 %{__mkdir_p} %{buildroot}%{_datadir}/applications
