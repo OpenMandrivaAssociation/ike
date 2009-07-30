@@ -57,18 +57,25 @@ find . -type f|xargs file|grep 'text'|cut -d: -f1|xargs perl -p -i -e 's/\r//'
 
 %build
 # using cmake macro breaks build
-cmake . -DCMAKE_INSTALL_PREFIX=/usr \
-	-DQTGUI=YES \
+cmake .	-DCMAKE_INSTALL_PREFIX=/usr \
 	-DETCDIR=/etc \
+	-DQTGUI=YES \
 	-DNATT=yes \
 	-DLDAP=yes \
 	-DTESTS=yes
-
+	
 %make
 
 %install
 rm -rf %{buildroot}
+
 %makeinstall_std
+
+
+# Awfully ugly, have to find a better way to fix 64 libs
+%ifarch x86_64
+mv %{buildroot}/usr/lib %{buildroot}%{_libdir}
+%endif
 
 %{__install} -m644 %{SOURCE1} -D %{buildroot}%{_sysconfdir}/iked.conf
 %{__install} -m755 script/iked -D %{buildroot}%{_initrddir}/iked
