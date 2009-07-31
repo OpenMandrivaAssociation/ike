@@ -1,6 +1,6 @@
 %define name    ike
 %define version 2.1.5
-%define release %mkrel 0.rc2.1
+%define release %mkrel 0.rc2.2
 %define major		2
 %define libname		%mklibname %{name} %{major}
  
@@ -32,8 +32,7 @@ of those which are not cross platform compatible.
 %package -n	qt-%{name}
 Summary:	Qt GUI for ike vpn
 Group:		Networking/Remote access
-Provides:	%{name} = %{version}-%{release}
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{version}-%{release}
 
 %description -n	qt-%{name}
 A Qt gui for the ike VPN client
@@ -41,7 +40,7 @@ A Qt gui for the ike VPN client
 %package -n	%{libname}
 Summary:	Main library for ike
 Group:		System/Libraries
-Provides:	%{name} = %{version}-%{release}
+Provides:	lib%{name} = %{version}-%{release}
 
 %description -n	%{libname}
 This package contains the library needed to run programs dynamically
