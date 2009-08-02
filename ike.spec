@@ -1,6 +1,6 @@
 %define name    ike
 %define version 2.1.5
-%define release %mkrel 0.rc2.2
+%define release %mkrel 0.rc2.3
 %define major		2
 %define libname		%mklibname %{name} %{major}
  
@@ -14,6 +14,7 @@ Group:		Networking/Remote access
 URL:		http://www.shrew.net/
 Source0:	http://www.shrew.net/download/ike/%{name}-%{version}-rc-2.tbz2
 Source1:	iked.conf
+Source2:	iked.init
 BuildRequires:  openssl-devel
 BuildRequires:  libldap-devel
 BuildRequires:	flex
@@ -77,7 +78,7 @@ mv %{buildroot}/usr/lib %{buildroot}%{_libdir}
 %endif
 
 %{__install} -m644 %{SOURCE1} -D %{buildroot}%{_sysconfdir}/iked.conf
-%{__install} -m755 script/iked -D %{buildroot}%{_initrddir}/iked
+%{__install} -m755 %{SOURCE2} -D %{buildroot}%{_initrddir}/iked
 mkdir -p %{buildroot}%{_docdir}/%{name}
 %{__install} -m750 *.TXT -D %{buildroot}%{_docdir}/%{name}
 
