@@ -1,6 +1,6 @@
 %define name    ike
 %define version 2.1.5
-%define release %mkrel 0.rc2.3
+%define release %mkrel 0.rc2.4
 %define major		2
 %define libname		%mklibname %{name} %{major}
  
@@ -15,6 +15,7 @@ URL:		http://www.shrew.net/
 Source0:	http://www.shrew.net/download/ike/%{name}-%{version}-rc-2.tbz2
 Source1:	iked.conf
 Source2:	iked.init
+Source3:	README.urpmi
 BuildRequires:  openssl-devel
 BuildRequires:  libldap-devel
 BuildRequires:	flex
@@ -81,6 +82,7 @@ mv %{buildroot}/usr/lib %{buildroot}%{_libdir}
 %{__install} -m755 %{SOURCE2} -D %{buildroot}%{_initrddir}/iked
 mkdir -p %{buildroot}%{_docdir}/%{name}
 %{__install} -m750 *.TXT -D %{buildroot}%{_docdir}/%{name}
+%{__install} -m750 %{SOURCE3} -D %{buildroot}%{_docdir}/%{name}
 
 #menu entry
 %{__mkdir_p} %{buildroot}%{_datadir}/applications
@@ -111,7 +113,8 @@ EOF
 
 %files
 %defattr(0755,root,root)
-%doc %{_docdir}/%{name}/*.TXT
+%doc %{_docdir}/%{name}/*.TXT 
+%doc %{_docdir}/%{name}/README.urpmi
 %config(noreplace) %{_sysconfdir}/iked.conf
 %{_sysconfdir}/iked.conf.sample
 %{_initrddir}/iked
