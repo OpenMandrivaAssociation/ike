@@ -22,6 +22,7 @@ BuildRequires:	flex
 BuildRequires:  bison
 BuildRequires:	cmake
 BuildRequires:	qt3-devel
+BuildRequires:	imagemagick
 BuildRoot:	%{_tmppath}/%{name}-%{version}
 
 %description
@@ -64,7 +65,7 @@ cmake .	-DCMAKE_INSTALL_PREFIX=/usr \
 	-DNATT=yes \
 	-DLDAP=yes \
 	-DTESTS=yes
-	
+
 %make
 
 %install
