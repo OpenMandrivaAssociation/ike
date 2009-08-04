@@ -1,6 +1,6 @@
 %define name    ike
 %define version 2.1.5
-%define release %mkrel 0.rc2.4
+%define release %mkrel 0.rc2.5
 %define major		2
 %define libname		%mklibname %{name} %{major}
  
@@ -72,7 +72,6 @@ rm -rf %{buildroot}
 
 %makeinstall_std
 
-
 # Awfully ugly, have to find a better way to fix 64 libs
 %ifarch x86_64
 mv %{buildroot}/usr/lib %{buildroot}%{_libdir}
@@ -83,6 +82,12 @@ mv %{buildroot}/usr/lib %{buildroot}%{_libdir}
 mkdir -p %{buildroot}%{_docdir}/%{name}
 %{__install} -m750 *.TXT -D %{buildroot}%{_docdir}/%{name}
 %{__install} -m750 %{SOURCE3} -D %{buildroot}%{_docdir}/%{name}
+
+mkdir -p %{buildroot}%{_iconsdir}/hicolor/{16x16,32x32,48x48,64x64}/apps
+install -m0644 source/ikea/png/ikea.png %{buildroot}%{_iconsdir}/hicolor/64x64/apps/%{name}.png
+convert -scale 48x48 source/ikea/png/ikea.png %{buildroot}%{_iconsdir}/hicolor/48x48/apps/%{name}.png
+convert -scale 32x32 source/ikea/png/ikea.png %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
+convert -scale 16x16 source/ikea/png/ikea.png %{buildroot}%{_iconsdir}/hicolor/16x16/apps/%{name}.png
 
 #menu entry
 %{__mkdir_p} %{buildroot}%{_datadir}/applications
@@ -126,6 +131,7 @@ EOF
 %defattr(0755,root,root)
 %{_bindir}/ike*
 %{_datadir}/applications/mandriva-qt-ike.desktop
+%{_iconsdir}/hicolor/*/apps/%{name}.png
 %{_mandir}/man1/*.1*
 
 %files -n %{libname}
