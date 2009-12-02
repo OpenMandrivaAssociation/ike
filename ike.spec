@@ -1,6 +1,6 @@
 %define name    ike
 %define version 2.1.5
-%define release %mkrel 0.rc3.1
+%define release %mkrel 0.rc5.1
 %define major		2
 %define libname		%mklibname %{name} %{major}
 
@@ -11,7 +11,7 @@ Summary:	Ipsec client with GUI
 License:	Shrew Soft
 Group:		Networking/Remote access
 URL:		http://www.shrew.net/
-Source0:	http://www.shrew.net/download/ike/%{name}-%{version}-rc-3.tbz2
+Source0:	http://www.shrew.net/download/ike/%{name}-%{version}-rc-5.tbz2
 Source1:	iked.conf
 Source2:	iked.init
 Source3:	README.urpmi
