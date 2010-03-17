@@ -1,6 +1,6 @@
 %define name    ike
 %define version 2.1.6
-%define release %mkrel 0.beta4.2
+%define release %mkrel 0.beta4.3
 %define major		2
 %define libname		%mklibname %{name} %{major}
 
@@ -53,6 +53,9 @@ linked with ike
 
 %setup -q -n %{name}
 
+#put iked log in its own dir
+sed -i 's:/var/log/:/var/log/iked/:' source/iked/iked.conf.sample
+
 # strip away annoying ^M
 find . -type f|xargs file|grep 'CRLF'|cut -d: -f1|xargs perl -p -i -e 's/\r//'
 find . -type f|xargs file|grep 'text'|cut -d: -f1|xargs perl -p -i -e 's/\r//'
@@ -84,6 +87,8 @@ sed -i 's:{CMAKE_INSTALL_PREFIX}/lib:{CMAKE_INSTALL_PREFIX}/lib64:' source/libpf
 mkdir -p %{buildroot}%{_docdir}/%{name}
 %{__install} -m750 *.TXT -D %{buildroot}%{_docdir}/%{name}
 %{__install} -m750 %{SOURCE3} -D %{buildroot}%{_docdir}/%{name}
+%{__install} -d -p %{buildroot}%{_localstatedir}/run/%{name}d
+%{__install} -d -p %{buildroot}%{_localstatedir}/log/%{name}d
 
 mkdir -p %{buildroot}%{_iconsdir}/hicolor/{16x16,32x32,48x48,64x64}/apps
 install -m0644 source/ikea/png/ikea.png %{buildroot}%{_iconsdir}/hicolor/64x64/apps/%{name}.png
@@ -143,6 +148,8 @@ EOF
 %{_sbindir}/iked
 %{_mandir}/man5/*.5*
 %{_mandir}/man8/*.8*
+%dir %{_localstatedir}/run/%{name}d
+%dir %{_localstatedir}/log/%{name}d
 
 %files -n qt-ike
 %defattr(0755,root,root)
