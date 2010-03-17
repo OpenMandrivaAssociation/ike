@@ -1,6 +1,6 @@
 %define name    ike
 %define version 2.1.6
-%define release %mkrel 0.beta4.1
+%define release %mkrel 0.beta4.2
 %define major		2
 %define libname		%mklibname %{name} %{major}
 
@@ -8,7 +8,7 @@ Name:		%{name}
 Version:	%{version}
 Release:	%{release}
 Summary:	Ipsec client with GUI
-License:	Shrew Soft
+License:	Sleepycat
 Group:		Networking/Remote access
 URL:		http://www.shrew.net/
 Source0:	http://www.shrew.net/download/ike/%{name}-%{version}-beta-4.tbz2
@@ -22,6 +22,7 @@ BuildRequires:  bison
 BuildRequires:	cmake
 BuildRequires:	qt3-devel
 BuildRequires:	imagemagick
+Requires:	logrotate
 BuildRoot:	%{_tmppath}/%{name}-%{version}
 
 %description
@@ -58,8 +59,8 @@ find . -type f|xargs file|grep 'text'|cut -d: -f1|xargs perl -p -i -e 's/\r//'
 
 %build
 # using cmake macro breaks build
-cmake .	-DCMAKE_INSTALL_PREFIX=/usr \
-	-DETCDIR=/etc \
+cmake .	-DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \
+	-DETCDIR=%{_sysconfdir} \
 	-DQTGUI=YES \
 	-DNATT=yes \
 	-DLDAP=yes \
@@ -70,12 +71,13 @@ cmake .	-DCMAKE_INSTALL_PREFIX=/usr \
 %install
 rm -rf %{buildroot}
 
-%makeinstall_std
-
-# Awfully ugly, have to find a better way to fix 64 libs
-%ifarch x86_64
-mv %{buildroot}/usr/lib %{buildroot}%{_libdir}
+#fix lib path on 64 bit arches
+%ifarch x86_64 ppc64 sparc64 s390x
+sed -i 's:{CMAKE_INSTALL_PREFIX}/lib:{CMAKE_INSTALL_PREFIX}/lib64:' source/libike/cmake_install.cmake
+sed -i 's:{CMAKE_INSTALL_PREFIX}/lib:{CMAKE_INSTALL_PREFIX}/lib64:' source/libpfk/cmake_install.cmake
 %endif
+
+%makeinstall_std
 
 %{__install} -m644 %{SOURCE1} -D %{buildroot}%{_sysconfdir}/iked.conf
 %{__install} -m755 %{SOURCE2} -D %{buildroot}%{_initrddir}/iked
@@ -88,6 +90,20 @@ install -m0644 source/ikea/png/ikea.png %{buildroot}%{_iconsdir}/hicolor/64x64/a
 convert -scale 48x48 source/ikea/png/ikea.png %{buildroot}%{_iconsdir}/hicolor/48x48/apps/%{name}.png
 convert -scale 32x32 source/ikea/png/ikea.png %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
 convert -scale 16x16 source/ikea/png/ikea.png %{buildroot}%{_iconsdir}/hicolor/16x16/apps/%{name}.png
+
+# Create /etc/logrotate.d/ike
+mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
+cat > %{buildroot}%{_sysconfdir}/logrotate.d/%{name} << EOF
+/var/log/%{name}/*.log {
+       weekly
+       rotate 10
+       copytruncate
+       delaycompress
+       compress
+       notifempty
+       missingok
+}
+EOF
 
 #menu entry
 %{__mkdir_p} %{buildroot}%{_datadir}/applications
@@ -121,6 +137,7 @@ EOF
 %doc %{_docdir}/%{name}/*.TXT 
 %doc %{_docdir}/%{name}/README.urpmi
 %config(noreplace) %{_sysconfdir}/iked.conf
+%config(noreplace) %{_sysconfdir}/logrotate.d/ike
 %{_sysconfdir}/iked.conf.sample
 %{_initrddir}/iked
 %{_sbindir}/iked
@@ -137,4 +154,5 @@ EOF
 %files -n %{libname}
 %defattr(-, root, root)
 %{_libdir}/*.so.%{major}*
-%{_libdir}/*.so
+%exclude %{_libdir}/*.so
+
