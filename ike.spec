@@ -1,6 +1,6 @@
 %define name    ike
 %define version 2.1.6
-%define release %mkrel 0.beta4.3
+%define release %mkrel 0.beta4.4
 %define major		2
 %define libname		%mklibname %{name} %{major}
 
@@ -138,7 +138,7 @@ EOF
 
 
 %files
-%defattr(0755,root,root)
+%defattr(-,root,root,-)
 %doc %{_docdir}/%{name}/*.TXT 
 %doc %{_docdir}/%{name}/README.urpmi
 %config(noreplace) %{_sysconfdir}/iked.conf
