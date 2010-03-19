@@ -1,6 +1,6 @@
 %define name    ike
 %define version 2.1.6
-%define release %mkrel 0.beta4.4
+%define release %mkrel 0.beta4.5
 %define major		2
 %define libname		%mklibname %{name} %{major}
 
