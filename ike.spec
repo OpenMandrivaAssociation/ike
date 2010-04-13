@@ -15,6 +15,7 @@ Source0:	http://www.shrew.net/download/ike/%{name}-%{version}-beta-4.tbz2
 Source1:	iked.conf
 Source2:	iked.init
 Source3:	README.urpmi
+Patch0:		ike-2.1.6-fix-link.patch
 BuildRequires:  openssl-devel
 BuildRequires:  libldap-devel
 BuildRequires:	flex
@@ -60,9 +61,10 @@ sed -i 's:/var/log/:/var/log/iked/:' source/iked/iked.conf.sample
 find . -type f|xargs file|grep 'CRLF'|cut -d: -f1|xargs perl -p -i -e 's/\r//'
 find . -type f|xargs file|grep 'text'|cut -d: -f1|xargs perl -p -i -e 's/\r//'
 
+%patch0 -p0 -b .build
+
 %build
-# using cmake macro breaks build
-cmake .	-DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \
+%cmake \
 	-DETCDIR=%{_sysconfdir} \
 	-DQTGUI=YES \
 	-DNATT=yes \
@@ -74,13 +76,7 @@ cmake .	-DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \
 %install
 rm -rf %{buildroot}
 
-#fix lib path on 64 bit arches
-%ifarch x86_64 ppc64 sparc64 s390x
-sed -i 's:{CMAKE_INSTALL_PREFIX}/lib:{CMAKE_INSTALL_PREFIX}/lib64:' source/libike/cmake_install.cmake
-sed -i 's:{CMAKE_INSTALL_PREFIX}/lib:{CMAKE_INSTALL_PREFIX}/lib64:' source/libpfk/cmake_install.cmake
-%endif
-
-%makeinstall_std
+%makeinstall_std -C build
 
 %{__install} -m644 %{SOURCE1} -D %{buildroot}%{_sysconfdir}/iked.conf
 %{__install} -m755 %{SOURCE2} -D %{buildroot}%{_initrddir}/iked
