@@ -16,6 +16,7 @@ Source1:	iked.conf
 Source2:	iked.init
 Source3:	README.urpmi
 Patch0:		ike-2.1.6-fix-link.patch
+Patch1:		ike-2.1.6-lib64.patch
 BuildRequires:  openssl-devel
 BuildRequires:  libldap-devel
 BuildRequires:	flex
@@ -51,7 +52,6 @@ This package contains the library needed to run programs dynamically
 linked with ike
 
 %prep
-
 %setup -q -n %{name}
 
 #put iked log in its own dir
@@ -62,8 +62,11 @@ find . -type f|xargs file|grep 'CRLF'|cut -d: -f1|xargs perl -p -i -e 's/\r//'
 find . -type f|xargs file|grep 'text'|cut -d: -f1|xargs perl -p -i -e 's/\r//'
 
 %patch0 -p0 -b .build
+%patch1 -p0 -b .lib64
 
 %build
+export CFLAGS="%optflags -fPIC"
+export CXXFLAGS="%optflags -fPIC"
 %cmake \
 	-DETCDIR=%{_sysconfdir} \
 	-DQTGUI=YES \
