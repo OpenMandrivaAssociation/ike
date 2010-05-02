@@ -1,6 +1,6 @@
 %define name    ike
 %define version 2.1.6
-%define release %mkrel 0.beta4.6
+%define release %mkrel 0.beta4.7
 %define major		2
 %define libname		%mklibname %{name} %{major}
 
@@ -151,8 +151,8 @@ EOF
 %dir %{_localstatedir}/log/%{name}d
 
 %files -n qt-ike
-%defattr(0755,root,root)
-%{_bindir}/ike*
+%defattr(-,root,root)
+%attr(0755,-,-) %{_bindir}/ike*
 %{_datadir}/applications/mandriva-qt-ike.desktop
 %{_iconsdir}/hicolor/*/apps/%{name}.png
 %{_mandir}/man1/*.1*
