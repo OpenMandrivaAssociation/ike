@@ -1,0 +1,18 @@
+--- source/libike/CMakeLists.txt.lib64	2010-04-13 17:15:07.000000000 +0200
++++ source/libike/CMakeLists.txt	2010-04-13 17:15:47.000000000 +0200
+@@ -33,5 +33,5 @@
+ 
+ install(
+ 	TARGETS ike
+-	LIBRARY DESTINATION lib )
++	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+ 
+--- source/libpfk/CMakeLists.txt.lib64	2010-04-13 17:16:07.000000000 +0200
++++ source/libpfk/CMakeLists.txt	2010-04-13 17:16:17.000000000 +0200
+@@ -31,5 +31,5 @@
+ 
+ install(
+ 	TARGETS pfk
+-	LIBRARY DESTINATION lib )
++	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+ 

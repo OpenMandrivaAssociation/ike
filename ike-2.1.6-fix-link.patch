@@ -1,0 +1,150 @@
+--- source/ikea/CMakeLists.txt.build	2010-04-13 15:05:05.000000000 +0000
++++ source/ikea/CMakeLists.txt	2010-04-13 15:05:20.000000000 +0000
+@@ -12,6 +12,8 @@
+ 	${IKE_SOURCE_DIR}/source/libidb
+ 	${IKE_SOURCE_DIR}/source/libith
+ 	${IKE_SOURCE_DIR}/source/liblog
++        ${CMAKE_CURRENT_BINARY_DIR}
++	${CMAKE_CURRENT_SOURCE_DIR}
+ 	${QT_INCLUDE_DIR} )
+ 
+ link_directories(
+--- source/ikec/CMakeLists.txt.build	2010-04-13 15:05:27.000000000 +0000
++++ source/ikec/CMakeLists.txt	2010-04-13 15:05:41.000000000 +0000
+@@ -16,6 +16,8 @@
+ 	${IKE_SOURCE_DIR}/source/libith
+ 	${IKE_SOURCE_DIR}/source/liblog
+ 	${IKE_SOURCE_DIR}/source/libip
++	${CMAKE_CURRENT_BINARY_DIR}
++        ${CMAKE_CURRENT_SOURCE_DIR}
+ 	${QT_INCLUDE_DIR} )
+ 
+ link_directories(
+--- source/iked/CMakeLists.txt.build	2010-04-13 15:04:42.000000000 +0000
++++ source/iked/CMakeLists.txt	2010-04-13 15:04:42.000000000 +0000
+@@ -102,18 +102,18 @@
+ # Custom command for flex
+ 
+ add_custom_command(
+-	SOURCE conf.token.ll
++	SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/conf.token.ll
+ 	COMMAND ${PATH_BIN_FLEX}
+-	ARGS -d -oconf.token.cpp conf.token.ll
++	ARGS -d -oconf.token.cpp ${CMAKE_CURRENT_SOURCE_DIR}/conf.token.ll
+ 	TARGET ConfParser
+ 	OUTPUTS conf.token.cpp )
+ 
+ # Custom command for bison
+ 
+ add_custom_command(
+-	SOURCE conf.parse.yy
++	SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/conf.parse.yy
+ 	COMMAND ${PATH_BIN_BISON}
+-	ARGS -oconf.parse.cpp conf.parse.yy
++	ARGS -oconf.parse.cpp ${CMAKE_CURRENT_SOURCE_DIR}/conf.parse.yy
+ 	TARGET ConfParser
+ 	OUTPUTS conf.parse.cpp conf.parse.hpp location.hh position.hh stack.hh )
+ 
+--- source/libidb/CMakeLists.txt.build	2010-04-13 15:04:42.000000000 +0000
++++ source/libidb/CMakeLists.txt	2010-04-13 15:04:42.000000000 +0000
+@@ -14,10 +14,15 @@
+ 	${IKE_SOURCE_DIR}/source/libith )
+ 
+ add_library(
+-	idb
++	idb STATIC
+ 	libidb.cpp
+ 	base64.cpp )
+ 
++target_link_libraries(
++	idb
++	ith
++	log )
++
+ set_target_properties(
+ 	idb PROPERTIES
+ 	VERSION ${RELVER}
+--- source/libike/CMakeLists.txt.build	2010-04-13 15:04:42.000000000 +0000
++++ source/libike/CMakeLists.txt	2010-04-13 15:04:42.000000000 +0000
+@@ -20,6 +20,10 @@
+ 	ike SHARED
+ 	libike.cpp )
+ 
++target_link_libraries(
++	ike
++	idb )
++
+ set_target_properties(
+ 	ike PROPERTIES
+ 	VERSION ${RELVER}
+--- source/libip/CMakeLists.txt.build	2010-04-13 15:04:42.000000000 +0000
++++ source/libip/CMakeLists.txt	2010-04-13 15:04:42.000000000 +0000
+@@ -14,7 +14,7 @@
+ 	${IKE_SOURCE_DIR}/source/libith )
+ 
+ add_library(
+-	ip
++	ip STATIC
+ 	libip.frag.cpp
+ 	libip.packet.cpp
+ 	libip.packet.dns.cpp
+@@ -24,6 +24,10 @@
+ 	libip.queue.cpp
+ 	libip.route.cpp )
+ 
++target_link_libraries(
++	ip
++	idb )
++
+ set_target_properties(
+ 	ip PROPERTIES
+ 	VERSION ${RELVER}
+--- source/libith/CMakeLists.txt.build	2010-04-13 15:04:42.000000000 +0000
++++ source/libith/CMakeLists.txt	2010-04-13 15:04:42.000000000 +0000
+@@ -11,7 +11,7 @@
+         ${IKE_SOURCE_DIR}/source )
+ 
+ add_library(
+-	ith
++	ith STATIC
+ 	libith.cpp )
+ 
+ # linux realtime library
+@@ -20,6 +20,7 @@
+ 
+ 	target_link_libraries(
+ 		ith
++		pthread
+ 		rt )
+ 
+ endif( PATH_LIB_RT )
+--- source/liblog/CMakeLists.txt.build	2010-04-13 15:04:42.000000000 +0000
++++ source/liblog/CMakeLists.txt	2010-04-13 15:04:42.000000000 +0000
+@@ -12,9 +12,13 @@
+         ${IKE_SOURCE_DIR}/source/libith )
+ 
+ add_library(
+-	log
++	log STATIC
+ 	liblog.cpp )
+ 
++target_link_libraries(
++	log
++	ith )
++
+ set_target_properties(
+ 	log PROPERTIES
+ 	VERSION ${RELVER}
+--- source/libpfk/CMakeLists.txt.build	2010-04-13 15:04:42.000000000 +0000
++++ source/libpfk/CMakeLists.txt	2010-04-13 15:04:42.000000000 +0000
+@@ -18,6 +18,10 @@
+ 	pfk SHARED
+ 	libpfk.cpp )
+ 
++target_link_libraries(
++	pfk
++	idb )
++
+ set_target_properties(
+         pfk PROPERTIES
+ 	VERSION ${RELVER}
