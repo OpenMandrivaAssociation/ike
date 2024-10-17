@@ -10,7 +10,7 @@ Release:	%{release}
 Summary:	Ipsec client with GUI
 License:	Sleepycat
 Group:		Networking/Remote access
-URL:		http://www.shrew.net/
+URL:		https://www.shrew.net/
 Source0:	http://www.shrew.net/download/ike/%{name}-%{version}-beta-4.tbz2
 Source1:	iked.conf
 Source2:	iked.init
